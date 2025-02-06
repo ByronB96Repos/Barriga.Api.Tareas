@@ -1,0 +1,6 @@
+@Barriga.Api.Tareas_HostAddress = http://localhost:5067
+
+GET {{Barriga.Api.Tareas_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
