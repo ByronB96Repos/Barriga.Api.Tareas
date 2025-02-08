@@ -8,9 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using Barriga.Api.Tareas.Data;
 using Barriga.Api.Tareas.Models;
 using Barriga.Api.Tareas.ModelsDTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Barriga.Api.Tareas.Controllers
 {
+    [Authorize]
+
     [Route("api/[controller]")]
     [ApiController]
     public class TareasController : ControllerBase

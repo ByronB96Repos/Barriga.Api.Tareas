@@ -20,14 +20,6 @@ namespace Barriga.Api.Tareas.Services
             _config = config;
         }
 
-        public async Task<string> Registrar(Usuario usuario, string password)
-        {
-            usuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
-            _context.Usuarios.Add(usuario);
-            await _context.SaveChangesAsync();
-            return "Usuario registrado";
-        }
-
         public async Task<string?> Login(string email, string password)
         {
             var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
@@ -41,21 +33,27 @@ namespace Barriga.Api.Tareas.Services
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:Secret"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
-            {
-            new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-            new Claim(ClaimTypes.Email, usuario.Email)
-        };
+            var claims = new[] {
+                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+                 new Claim(ClaimTypes.Email, usuario.Email)
+            };
+
+            // Fecha actual en UTC (de creación)
+            var creationDate = DateTime.UtcNow;
+            // Fecha de expiración (2 horas después)
+            var expirationDate = creationDate.AddHours(2);
 
             var token = new JwtSecurityToken(
                 issuer: _config["JwtSettings:Issuer"],
                 audience: _config["JwtSettings:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(2),
+                expires: expirationDate,
                 signingCredentials: creds
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            return $"{tokenString}";
         }
+
     }
 }
