@@ -97,7 +97,7 @@ namespace Barriga.Api.Tareas.Controllers
                 Id = 0,
                 Nombre = tareadto.Nombre,
                 Descripcion = tareadto.Descripcion,
-                Estado = "Incompleto",
+                Estado = "Pendiente",
                 FechaCreacion = DateTime.Now,
                 FechaEdicion = DateTime.Now,
                 Observacion = tareadto.Observacion,
